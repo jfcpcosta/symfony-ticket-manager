@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ticket.title }}{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">
+                {{ ticket.title }}
+                <span class="badge badge-{{ ticket.getSeverityClass }}">{{ ticket.severity.name | upper }}</span>
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                Created by {{ ticket.createdBy.email }} at {{ ticket.createdAt | date('H:i:s d/m/Y')}}
+            </h6>
+        </div>
+
+        <div class="card-body">
+            <p>{{ ticket.description }}</p>
+        </div>
+
+        <div class="card-footer text-muted">
+            {% if not ticket.done %}
+                <a href="/tickets/{{ ticket.id }}/done" class="btn btn-success" onclick="return confirm('Done?')">Mark as resolved</a>
+            {% endif %}
+            <a href="/tickets/{{ ticket.id }}/update" class="btn btn-info" onclick="return confirm('Update?')">Update</a>
+            <a href="/tickets/{{ ticket.id }}/remove" class="btn btn-danger" onclick="return confirm('Remove?')">Remove</a>
+        </div>    
+    </div>
+{% endblock %}
