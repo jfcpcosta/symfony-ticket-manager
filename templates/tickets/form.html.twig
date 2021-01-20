@@ -6,40 +6,41 @@
     <form action="/tickets/save" method="post">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">{{ ticket is defined ? 'Update' : 'Create' }} Ticket</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Add ticket info</h6>
+                <h5 class="card-title">{{ ticket is defined ? 'Update' : 'Add' }} Ticket</h5>
+                <h6 class="card-subtitle">Add ticket info</h6>
             </div>
 
             <div class="card-body">
-                <div class="form-group">
-                    <label for="titleInput">Title</title>
-                    <input type="text" class="form-control" id="titleInput" placeholder="Ticket title" name="title" value="{{ ticket is defined ? ticket.title }}">
+                <div class="mb-3">
+                    <label for="titleInput" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="titleInput" name="title" placeholder="Ticket title" value="{{ ticket is defined ? ticket.title }}">
                 </div>
-                <div class="form-group">
-                    <label for="descriptionInput">Description</title>
-                    <textarea class="form-control" id="descriptionInput" placeholder="Ticket description" name="description" rows="3">{{ ticket is defined ? ticket.description }}</textarea>
+                <div class="mb-3">
+                    <label for="descriptionInput" class="form-label">Description</label>
+                    <textarea class="form-control" id="descriptionInput" name="description" placeholder="Ticket description" rows="3">{{ ticket is defined ? ticket.description }}</textarea>
                 </div>
-                <div class="form-group">
-                    <label for="severityInput">Severity</title>
-                    <select class="form-control" id="severityInput" name="severity">
+
+                <div class="mb-3">
+                    <label for="severityInput" class="form-label">Severity</label>
+                    <select id="severityInput" class="form-select" name="severity">
                         {% for severity in severities %}
                             {% if ticket is defined %}
-                                <option value="{{ severity.id }}" {{ ticket.severity == severity.id ? 'selected' }}>{{ severity.name | upper }}</option>
+                                <option value="{{ severity.id }}" {{ ticket.severity.id == severity.id ? 'selected' }}>{{ severity.name | upper }}</option>
                             {% else %}
                                 <option value="{{ severity.id }}" {{ severity.isDefault ? 'selected' }}>{{ severity.name | upper }}</option>
                             {% endif %}
                         {% endfor %}
                     </select>
-                </div>            
+                </div>
             </div>
 
             {% if ticket is defined %}
                 <input type="hidden" name="id" value="{{ ticket.id }}">
             {% endif %}
 
-            <div class="card-footer text-muted">
-                <button class="btn btn-primary" type="submit">Save</button>
-            </div>    
+            <div class="card-footer">
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+            </div>
         </div>
     </form>
 {% endblock %}

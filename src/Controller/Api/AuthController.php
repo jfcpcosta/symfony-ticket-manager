@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/api/auth")
  */
-class ApiAuthController extends ApiController
+class AuthController extends Controller
 {
 
     /**
