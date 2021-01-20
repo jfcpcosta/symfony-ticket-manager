@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pendent Tickets{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <div class="card">
@@ -8,18 +8,20 @@
             <h5 class="card-title">{{ title }}</h5>
         </div>
 
-        <div class="card-body">
-            <ul class="list-group">
-                {% if tickets|length == 0 %}
-                    <li class="list-group-item">No tickets pendent</li>
-                {% endif %}
+        <ul class="list-group list-group-flush">
+            {% if tickets|length == 0 %}
+                <li class="list-group-item">No tickets added</li>
+            {% endif %}
 
-                {% for ticket in tickets %}
-                    <a href="/tickets/{{ ticket.id }}" class="list-group-item list-group-item-action list-group-item-{{ ticket.getSeverityClass }}">
-                        {{ ticket.title }}
-                    </a>
-                {% endfor %}
-            </ul>
+            {% for ticket in tickets %}
+                <a href="/tickets/{{ ticket.id }}" class="list-group-item list-group-item-action list-group-item-{{ ticket.severityCssClass }}">
+                    {{ ticket.title }}
+                </a>
+            {% endfor %}
+        </ul>
+
+        <div class="card-body">
+            <a href="/tickets/add" class="card-link">Add new ticket</a>
         </div>
     </div>
 {% endblock %}

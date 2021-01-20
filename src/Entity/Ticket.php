@@ -40,17 +40,15 @@ class Ticket
 
     /**
      * @ORM\ManyToOne(targetEntity=Severity::class, inversedBy="tickets")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $severity;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tickets")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $createdBy;
 
-    public function __construct(string $title = null, int $severity = null)
+    public function __construct(string $title = null, Severity $severity = null)
     {
         $this->createdAt = new DateTime();
         $this->done = false;
@@ -88,18 +86,6 @@ class Ticket
         return $this;
     }
 
-    public function getSeverity(): ?Severity
-    {
-        return $this->severity;
-    }
-
-    public function setSeverity(Severity $severity): self
-    {
-        $this->severity = $severity;
-
-        return $this;
-    }
-
     public function getDone(): ?bool
     {
         return $this->done;
@@ -124,9 +110,26 @@ class Ticket
         return $this;
     }
 
-    public function getSeverityClass() {
-        $classes = ['info', 'primary', 'success', 'warning', 'danger'];
-        return $classes[$this->severity->getId() - 1];   
+    public function getSeverity(): ?Severity
+    {
+        return $this->severity;
+    }
+
+    public function setSeverity(?Severity $severity): self
+    {
+        $this->severity = $severity;
+
+        return $this;
+    }
+
+    public function getSeverityCssClass(): string {
+        switch ($this->severity->getId()) {
+            case 1: return 'info';
+            case 2: return 'primary';
+            case 3: return 'success';
+            case 4: return 'warning';
+            case 5: return 'danger';
+        }
     }
 
     public function getCreatedBy(): ?User

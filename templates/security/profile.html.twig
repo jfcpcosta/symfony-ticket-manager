@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile {{ app.user.name }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-4">
+            <form method="post">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">My Info</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="nameInput" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Your name" value="{{ app.user.name }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Your name" value="{{ app.user.email }}" disabled>
+                        </div>
+                        <div class="mb-3 d-none" id="passwordGroup">
+                            <label for="passwordInput" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Enter new password" disabled>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button class="btn btn-info btn-sm" id="editButton">Edit</button>
+                        <button class="btn btn-primary btn-sm d-none" type="submit" id="saveButton">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">My tickets</h5>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    {% if app.user.tickets|length == 0 %}
+                        <li class="list-group-item">No tickets added</li>
+                    {% endif %}
+
+                    {% for ticket in app.user.tickets %}
+                        <a href="/tickets/{{ ticket.id }}" class="list-group-item list-group-item-action list-group-item-{{ ticket.severityCssClass }}">
+                            {{ ticket.title }}
+                        </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        let editMode = false;
+
+        const editButton = document.querySelector('#editButton');
+        const saveButton = document.querySelector('#saveButton');
+        const passwordGroup = document.querySelector('#passwordGroup');
+        const inputList = document.querySelectorAll('input');
+
+        editButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            editMode = !editMode;
+
+            if (editMode) {
+                editButton.textContent = 'Cancel';
+                saveButton.classList.remove('d-none');
+                passwordGroup.classList.remove('d-none');
+                inputList.forEach(input => input.removeAttribute('disabled'));
+            } else {
+                editButton.textContent = 'Edit';
+                saveButton.classList.add('d-none');
+                passwordGroup.classList.add('d-none');
+                inputList.forEach(input => input.setAttribute('disabled', 'disabled'));
+            }
+
+            return false;
+        });
+    </script>
+
+{% endblock %}

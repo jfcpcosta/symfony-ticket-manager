@@ -33,4 +33,35 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    /**
+     * @Route("/profile", name="app_profile", methods={"GET"})
+     */
+    public function profile(): Response {
+        return $this->render('security/profile.html.twig');
+    }
+    
+    /**
+     * @Route("/profile", name="app_profile_save", methods={"POST"})
+     */
+    public function saveProfile(Request $request, UserPasswordEncoderInterface $passwordEncoder): RedirectResponse {
+        
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($this->getUser()->getId());
+
+        $user->setName($request->get('name'));
+        $user->setEmail($request->get('email'));
+        
+        if (!empty($request->get('password'))) {
+            $user->setPassword($passwordEncoder->encodePassword($user, $request->get('password')));
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        $this->addFlash('info', 'User updated');
+
+        return $this->redirectToRoute('app_profile');
+    }
 }

@@ -41,6 +41,11 @@ class User implements UserInterface
      */
     private $tickets;
 
+    /**
+     * @ORM\Column(type="string", length=180, nullable=true)
+     */
+    private $name;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -150,6 +155,18 @@ class User implements UserInterface
                 $ticket->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
