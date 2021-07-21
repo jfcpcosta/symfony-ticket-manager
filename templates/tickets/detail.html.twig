@@ -1,0 +1,45 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}{{ ticket.title }}{% endblock %}
+
+{% block content %}
+    <form action="/tickets/save" method="post">
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title d-flex justify-content-between align-items-center">
+                    {{ ticket.title }}
+                    <span class="badge bg-{{ ticket.severityCssClass}}">{{ ticket.severity.name }}</span>
+                </h5>
+                <p class="card-subtitle text-muted ">Created by <strong>{{ ticket.createdBy.name }}</strong> and assigned to <strong>{{ ticket.assignedTo.name }}</strong></p>
+
+                <p>{{ ticket.description }}</p>
+            </div>
+
+            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                <span>
+                    {{ ticket.createdAt | date('H:i:s d/m/Y') }}
+                </span>
+
+                <div>
+                    {% if not ticket.done %}
+                        <a href="{{ path('ticket_mark_resolved', { id: ticket.id }) }}" class="btn btn-success btn-sm" onclick="return confirm('Done?')">
+                            <span data-feather="check"></span>
+                            Mark as Resolved
+                        </a>
+                    {% endif %}
+
+                    {% if ticket.createdBy.id == app.user.id %}
+                        <a href="{{ path('ticket_update', { id: ticket.id }) }}" class="btn btn-warning btn-sm" onclick="return confirm('Update?')">
+                            <span data-feather="edit"></span>
+                            Update
+                        </a>
+                        <a href="{{ path('ticket_remove', { id: ticket.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Remove?')">
+                            <span data-feather="trash-2"></span>
+                            Remove
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

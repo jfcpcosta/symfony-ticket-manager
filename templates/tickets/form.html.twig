@@ -1,0 +1,57 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}{{ ticket is defined ? 'Update' : 'Add' }} Ticket{% endblock %}
+
+{% block content %}
+    <form action="{{ path('save_ticket') }}" method="post">
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">{{ ticket is defined ? 'Update' : 'Add' }} Ticket</h5>
+                <h6 class="card-subtitle">Add or update ticket info</h6>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="titleInput" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="titleInput" name="title" placeholder="Ticket title" value="{{ ticket is defined ? ticket.title }}">
+                </div>
+                <div class="mb-3">
+                    <label for="descriptionInput" class="form-label">Description</label>
+                    <textarea class="form-control" id="descriptionInput" name="description" placeholder="Ticket description">{{ ticket is defined ? ticket.description }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="severityInput" class="form-label">Severity</label>
+                    <select class="form-select" id="severityInput" name="severity">
+                        {% for severity in severities %}
+                            {% if ticket is defined %}
+                                <option value="{{ severity.id }}" {{ ticket.severity.id == severity.id ? 'selected' }}>{{ severity.name | upper}}</option>
+                            {% else %}
+                                <option value="{{ severity.id }}" {{ severity.isDefault ? 'selected' }}>{{ severity.name | upper}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="assignedToInput" class="form-label">Assigned to</label>
+                    <select class="form-select" id="assignedToInput" name="assignedTo">
+                        {% for user in users %}
+                            {% if ticket is defined %}
+                                <option value="{{ user.id }}" {{ ticket.assignedTo.id == user.id ? 'selected' }}>{{ user.name}}</option>
+                            {% else %}
+                                <option value="{{ user.id }}">{{ user.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            {% if ticket is defined %}
+                <input type="hidden" name="id" value="{{ ticket.id }}">
+            {% endif %}
+
+            <div class="card-footer">
+                <button class="btn btn-primary btn-sm" type="submit">Save</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

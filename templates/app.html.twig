@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Ticket Manager</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <form class="w-100" action="{{ path('tickets') }}">
+            <input class="form-control form-control-dark" type="text" placeholder="Search" aria-label="Search" name="search">
+        </form>
+        
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center link-light text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://gravatar.com/avatar/{{ app.user.gravatar }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                <strong>{{ app.user.name }}</strong>
+            </a>
+            <ul class="dropdown-menu text-small shadow dropdown-menu-lg-end" aria-labelledby="dropdownUser2">
+                <li>
+                    <a class="dropdown-item" href="{{ path('add_ticket') }}">
+                        <span data-feather="package"></span>
+                        New ticket
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{{ path('app_profile') }}">
+                        <span data-feather="user"></span>
+                        Profile
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}">
+                        <span data-feather="log-out"></span>
+                        Sign out
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'dashboard' in app.request.get('_route') ? 'active' }}" aria-current="page" href="/dashboard">
+                                <span data-feather="home"></span>
+                                Dashboard
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mb-1 text-muted">
+                        <span>Tickets</span>
+                        <a class="link-secondary" href="{{ path('add_ticket') }}" aria-label="Add a new ticket">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'tickets' == app.request.get('_route') ? 'active' }}" href="{{ path('tickets') }}">
+                                <span data-feather="package"></span>
+                                Active Tickets
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'archived_tickets' in app.request.get('_route') ? 'active' }}" href="{{ path('archived_tickets') }}">
+                                <span data-feather="archive"></span>
+                                Archived Tickets
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="mt-4 alert alert-{{ label }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}{{ app.user.name }}{% endblock %}
+
+{% block content %}
+    <div class="card mt-4">
+        <form method="post">
+            <div class="row g-0">
+                <div class="col-md-3 p-2">
+                    <img src="https://gravatar.com/avatar/{{ app.user.gravatar }}?s=160" class="img-fluid rounded" alt="User avatar">
+                </div>
+                <div class="col-md-9">
+                    <div class="card-body">
+                        <h5 class="card-title">My Info</h5>
+
+                        <div class="mb-3">
+                            <label for="nameInput" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Your name" value="{{ app.user.name}}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Your email" value="{{ app.user.email}}" disabled>
+                        </div>
+                        <div class="mb-3 d-none" id="passwordGroup">
+                            <label for="passwordInput" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Enter new password" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn btn-info btn-sm" id="editButton">Edit</button>
+                <button class="btn btn-primary btn-sm d-none" type="submit" id="saveButton">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">My Tickets</h5>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    {% for ticket in app.user.tickets %}
+                        <a href="{{ path('ticket_detail', { id: ticket.id }) }}" class="list-group-item list-group-item-action list-group-item-{{ ticket.severityCssClass }}">
+                            {{ ticket.title }}
+                        </a>
+                    {% else %}
+                        <li class="list-group-item">No tickets created</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Assigned Tickets</h5>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    {% for ticket in app.user.assignedTickets %}
+                        <a href="{{ path('ticket_detail', { id: ticket.id }) }}" class="list-group-item list-group-item-action list-group-item-{{ ticket.severityCssClass }}">
+                            {{ ticket.title }}
+                        </a>
+                    {% else %}
+                        <li class="list-group-item">No tickets created</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        let editMode = false;
+
+        const editButton = document.querySelector('#editButton');
+        const saveButton = document.querySelector('#saveButton');
+        const passwordGroup = document.querySelector('#passwordGroup');
+        const inputList = document.querySelectorAll('.card-body input');
+
+        editButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            editMode = !editMode;
+
+            if (editMode) {
+                editButton.textContent = 'Cancel';
+                saveButton.classList.remove('d-none');
+                passwordGroup.classList.remove('d-none');
+                inputList.forEach(input => input.removeAttribute('disabled'));
+            } else {
+                editButton.textContent = 'Edit';
+                saveButton.classList.add('d-none');
+                passwordGroup.classList.add('d-none');
+                inputList.forEach(input => input.setAttribute('disabled', 'disabled'));
+            }
+
+            return false;
+        });
+    </script>
+
+{% endblock %}

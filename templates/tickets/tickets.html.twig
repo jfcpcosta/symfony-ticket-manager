@@ -1,0 +1,23 @@
+{% extends 'app.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">{{ title }}</h5>
+        </div>
+
+        <ul class="list-group list-group-flush">
+            {% for ticket in tickets %}
+                <a href="{{ path('ticket_detail', { id: ticket.id }) }}" class="list-group-item list-group-item-action list-group-item-{{ ticket.severityCssClass }}">
+                    {{ ticket.title }}
+                </a>
+            {% else %}
+                <li class="list-group-item">No tickets added</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
